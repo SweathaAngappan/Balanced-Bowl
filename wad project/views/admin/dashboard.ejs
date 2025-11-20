@@ -1,0 +1,26 @@
+<%- include("../partials/header") %>
+<h3>Admin Dashboard</h3>
+
+<h5>Users</h5>
+<table class="table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Action</th></tr></thead>
+<tbody>
+<% users.forEach(u => { %>
+  <tr><td><%= u.name %></td><td><%= u.email %></td><td><%= u.role %></td>
+    <td>
+      <form method="POST" action="/admin/user/<%= u._id %>/delete" onsubmit="return confirm('delete?')">
+        <button class="btn btn-sm btn-danger">Delete</button>
+      </form>
+    </td>
+  </tr>
+<% }) %>
+</tbody></table>
+
+<h5>Appointments</h5>
+<table class="table"><thead><tr><th>User</th><th>Dietician</th><th>Date</th><th>Status</th></tr></thead>
+<tbody>
+<% appts.forEach(a => { %>
+  <tr><td><%= a.user.name %></td><td><%= a.dietician.name %></td><td><%= a.date.toLocaleString() %></td><td><%= a.status %></td></tr>
+<% }) %>
+</tbody></table>
+
+<%- include("../partials/footer") %>

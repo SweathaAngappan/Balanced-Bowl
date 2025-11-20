@@ -1,0 +1,26 @@
+<%- include("../partials/header") %>
+
+<h3>Dieticians</h3>
+
+<form class="row g-2 mb-3">
+  <div class="col-md-4"><input name="q" value="<%= query.q||'' %>" class="form-control" placeholder="Search"></div>
+  <div class="col-md-3"><input name="specialization" value="<%= query.specialization||'' %>" class="form-control" placeholder="Specialization"></div>
+  <div class="col-md-3"><input name="location" value="<%= query.location||'' %>" class="form-control" placeholder="Location"></div>
+  <div class="col-md-2"><button class="btn btn-primary">Search</button></div>
+</form>
+
+<div class="row">
+  <% dieticians.forEach(d => { %>
+    <div class="col-md-4">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5><%= d.name %></h5>
+          <p><%= d.specialization %> — <%= d.location %></p>
+          <a class="btn btn-sm btn-outline-primary" href="/dieticians/<%= d._id %>">View</a>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<%- include("../partials/footer") %>

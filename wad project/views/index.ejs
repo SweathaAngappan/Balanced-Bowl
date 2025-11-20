@@ -1,0 +1,22 @@
+<%- include("partials/header") %>
+<h1 class="mb-4">Welcome to The Balanced Bowl</h1>
+
+<div class="row">
+  <div class="col-md-8">
+    <p>Find certified dieticians, book appointments, manage your health.</p>
+    <a class="btn btn-primary" href="/dieticians">Find a Dietician</a>
+  </div>
+  <div class="col-md-4">
+    <h5>Featured Dieticians</h5>
+    <% dieticians.forEach(d => { %>
+      <div class="card mb-2">
+        <div class="card-body">
+          <h6><%= d.name %></h6>
+          <p class="mb-0"><%= d.specialization %> — <%= d.location %></p>
+          <a href="/dieticians/<%= d._id %>" class="btn btn-sm btn-outline-primary mt-2">View</a>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>
+<%- include("partials/footer") %>

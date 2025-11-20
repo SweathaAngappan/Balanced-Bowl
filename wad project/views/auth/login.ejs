@@ -1,0 +1,11 @@
+<%- include("../partials/header") %>
+<h3>Login</h3>
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+<form action="/login" method="POST">
+  <div class="mb-2"><label>Email</label><input class="form-control" name="email" type="email"></div>
+  <div class="mb-2"><label>Password</label><input class="form-control" name="password" type="password"></div>
+  <button class="btn btn-primary">Login</button>
+</form>
+<%- include("../partials/footer") %>

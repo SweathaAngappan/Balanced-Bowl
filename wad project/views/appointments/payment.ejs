@@ -1,0 +1,10 @@
+<%- include("../partials/header") %>
+<h3>Payment for appointment with <%= appt.dietician.name %></h3>
+<p>Date: <%= (new Date(appt.date)).toLocaleDateString() %> | Slot: <%= appt.timeSlot %></p>
+
+<form action="/appointments/<%= appt._id %>/pay/mock" method="POST">
+  <p>This is a mock payment page — integrate real gateway later.</p>
+  <button class="btn btn-success">Pay (Mock)</button>
+</form>
+
+<%- include("../partials/footer") %>

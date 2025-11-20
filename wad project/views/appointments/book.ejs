@@ -1,0 +1,9 @@
+<%- include("../partials/header") %>
+<h3>Book with <%= dietician.name %></h3>
+<form action="/appointments/book/<%= dietician._id %>" method="POST">
+  <div class="mb-2"><label>Date</label><input type="date" name="date" class="form-control" required></div>
+  <div class="mb-2"><label>Time Slot</label><input name="timeSlot" class="form-control" placeholder="e.g. 10:00 AM"></div>
+  <div class="mb-2"><label>Notes</label><textarea name="notes" class="form-control"></textarea></div>
+  <button class="btn btn-primary">Proceed to Payment</button>
+</form>
+<%- include("../partials/footer") %>

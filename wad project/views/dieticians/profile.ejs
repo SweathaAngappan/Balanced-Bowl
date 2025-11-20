@@ -1,0 +1,17 @@
+<%- include("../partials/header") %>
+<h3><%= dietician.name %></h3>
+<p><strong>Specialization:</strong> <%= dietician.specialization %></p>
+<p><strong>Location:</strong> <%= dietician.location %></p>
+<p><strong>About:</strong> <%= dietician.about %></p>
+
+<a class="btn btn-success" href="/appointments/book/<%= dietician._id %>">Book Appointment</a>
+
+<h4 class="mt-4">Reviews</h4>
+<% reviews.forEach(r => { %>
+  <div class="border p-2 mb-2">
+    <strong><%= r.user.name %></strong> - <%= r.rating %>/5
+    <p><%= r.comment %></p>
+  </div>
+<% }) %>
+
+<%- include("../partials/footer") %>

@@ -1,0 +1,41 @@
+<%- include("../partials/header") %>
+<h3>Register</h3>
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+<form action="/register" method="POST">
+  <div class="mb-2">
+    <label>Name</label><input class="form-control" name="name" required>
+  </div>
+  <div class="mb-2">
+    <label>Email</label><input class="form-control" name="email" type="email" required>
+  </div>
+  <div class="mb-2">
+    <label>Password</label><input class="form-control" name="password" type="password" required>
+  </div>
+  <div class="mb-2">
+    <label>Role</label>
+    <select name="role" class="form-control">
+      <option value="user">User</option>
+      <option value="dietician">Dietician</option>
+    </select>
+  </div>
+
+  <div id="dieticianFields" style="display:none;">
+    <div class="mb-2"><label>Specialization</label><input class="form-control" name="specialization"></div>
+    <div class="mb-2"><label>Location</label><input class="form-control" name="location"></div>
+    <div class="mb-2"><label>Consultation Type</label><input class="form-control" name="consultationType"></div>
+    <div class="mb-2"><label>About</label><textarea class="form-control" name="about"></textarea></div>
+  </div>
+
+  <button class="btn btn-primary">Register</button>
+</form>
+
+<script>
+const roleSelect = document.querySelector("select[name='role']");
+roleSelect.addEventListener("change", ()=>{
+  document.getElementById("dieticianFields").style.display = roleSelect.value === "dietician" ? "block" : "none";
+});
+</script>
+
+<%- include("../partials/footer") %>

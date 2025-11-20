@@ -1,0 +1,11 @@
+<%- include("../partials/header") %>
+<h3>My Appointments</h3>
+<% appts.forEach(a => { %>
+  <div class="card mb-2">
+    <div class="card-body">
+      <strong><%= a.dietician.name %></strong> — <%= new Date(a.date).toLocaleString() %> | <%= a.timeSlot %>
+      <p>Status: <%= a.status %> | Payment: <%= a.paymentStatus %></p>
+    </div>
+  </div>
+<% }) %>
+<%- include("../partials/footer") %>
