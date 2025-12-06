@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <div class="card" style="max-width:520px;margin:18px auto">
+      <h2>Sign up</h2>
+
+      <form action="/register" method="post">
+
+        <!-- Role Selection -->
+        <div class="field">
+          <label>Registering as</label>
+          <select name="role" id="roleSelect">
+            <option value="user">User</option>
+            <option value="dietician">Dietician</option>
+          </select>
+        </div>
+
+        <!-- Common Fields -->
+        <div class="field">
+          <label>Name</label>
+          <input type="text" name="name" required>
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="email" required>
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="password" required>
+        </div>
+
+        <!-- USER FIELDS -->
+        <div id="userFields">
+          <div class="field">
+            <label>Phone</label>
+            <input type="text" name="u_phone">
+          </div>
+
+          <div class="field">
+            <label>Age</label>
+            <input type="number" name="u_age">
+          </div>
+
+          <div class="field">
+            <label>Height (cm)</label>
+            <input type="number" name="u_height">
+          </div>
+
+          <div class="field">
+            <label>Weight (kg)</label>
+            <input type="number" name="u_weight">
+          </div>
+        </div>
+
+        <!-- DIETICIAN FIELDS -->
+        <div id="dieticianFields" style="display:none">
+
+          <div class="field">
+            <label>Phone</label>
+            <input type="text" name="d_phone">
+          </div>
+
+          <div class="field">
+            <label>Certificates (comma separated)</label>
+            <input type="text" name="d_certificates" placeholder="e.g., RDN, IDF Level 2">
+          </div>
+
+          <div class="field">
+            <label>Specialization (comma separated)</label>
+            <input type="text" name="d_specialization" placeholder="e.g., Weight Loss, PCOD, Diabetes">
+          </div>
+
+          <div class="field">
+            <label>Experience (years)</label>
+            <input type="number" name="d_experienceYears">
+          </div>
+
+          <div class="field">
+            <label>Fee (in Rs)</label>
+            <input type="number" name="d_fee">
+          </div>
+
+          <div class="field">
+            <label>Consultation Modes (comma separated)</label>
+            <input type="text" name="d_modes" placeholder="online, in-person">
+          </div>
+
+        </div>
+
+        <button class="btn" style="margin-top:12px">Create account</button>
+      </form>
+
+      <script>
+        document.getElementById("roleSelect").addEventListener("change", function(){
+          const role = this.value;
+          document.getElementById("userFields").style.display = (role === "user") ? "block" : "none";
+          document.getElementById("dieticianFields").style.display = (role === "dietician") ? "block" : "none";
+        });
+      </script>
+
+    </div>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

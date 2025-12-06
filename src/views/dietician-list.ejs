@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2>Dieticians</h2>
+      <form action="/dieticians" method="get" style="display:flex;gap:8px">
+        <input type="text" name="q" placeholder="Search by name" value="<%= query.q || '' %>">
+        <button class="btn">Search</button>
+      </form>
+    </div>
+
+    <div class="grid" style="margin-top:12px">
+      <% dieticians.forEach(function(d){ %>
+        <div class="card dietician">
+          <div class="avatar"><%= d.user.name.split(' ').map(n=>n[0]).slice(0,2).join('') %></div>
+          <div style="flex:1">
+            <h3><a href="/dieticians/<%= d._id %>"><%= d.user.name %></a></h3>
+            <div class="meta"><%= d.specialization.join(', ') %> • <%= d.experienceYears || 0 %> yrs • ₹<%= d.fee %></div>
+          </div>
+          <div>
+            <a href="/dieticians/<%= d._id %>" class="btn">View</a>
+          </div>
+        </div>
+      <% }) %>
+      <% if (dieticians.length === 0) { %>
+        <div class="card">No dieticians found — try broadening your search.</div>
+      <% } %>
+    </div>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

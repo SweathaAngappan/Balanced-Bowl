@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <div class="card">
+      <div class="dietician" style="align-items:center">
+        <div class="avatar" style="width:80px;height:80px;font-size:28px;">
+          <%= (dietician && dietician.user && dietician.user.name) ? dietician.user.name.split(' ').map(n => n[0]).slice(0,2).join('') : '??' %>
+        </div>
+        <div style="margin-left:16px">
+          <h2><%= (dietician && dietician.user && dietician.user.name) || 'Unnamed Dietician' %></h2>
+          <div class="meta">Role: Dietician • Email: <%= (dietician && dietician.user && dietician.user.email) || '—' %></div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px">
+        <h3>Professional Information</h3>
+        <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:8px">
+          <div><strong>Phone:</strong> <%= (dietician && dietician.user && dietician.user.phone) || '—' %></div>
+          <div><strong>Specialization:</strong> <%= (dietician && dietician.specialization && dietician.specialization.length) ? dietician.specialization.join(', ') : '—' %></div>
+          <div><strong>Experience:</strong> <%= (dietician && dietician.experienceYears) || 0 %> years</div>
+          <div><strong>Consultation Fee:</strong> ₹<%= (dietician && dietician.fee) || 0 %></div>
+          <div><strong>Modes:</strong> <%= (dietician && dietician.consultationModes && dietician.consultationModes.length) ? dietician.consultationModes.join(', ') : '—' %></div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px">
+        <h3>About</h3>
+        <p style="color:var(--muted)"><%= (dietician && dietician.user && dietician.user.bio) || 'No bio yet.' %></p>
+      </div>
+
+      <% if (reviews && reviews.length > 0) { %>
+        <div style="margin-top:24px">
+          <h3>Reviews</h3>
+          <% reviews.forEach(r => { %>
+            <div style="border-bottom:1px solid #f0f6f0;padding:8px 0;margin-bottom:4px;">
+              <strong><%= (r.user && r.user.name) || 'Anonymous' %></strong> — <span class="meta"><%= r.rating || 0 %> / 5</span>
+              <p style="color:var(--muted)"><%= r.comment || '' %></p>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+
+    </div>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

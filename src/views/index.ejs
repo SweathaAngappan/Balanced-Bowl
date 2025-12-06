@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <% if (success) { %>
+      <div class="card" style="border-left:4px solid #9fe0aa;margin-top:18px;padding:12px"><strong>Success:</strong> <%= success %></div>
+    <% } %>
+    <% if (error) { %>
+      <div class="card" style="border-left:4px solid #ffb4b4;margin-top:18px;padding:12px"><strong>Error:</strong> <%= error %></div>
+    <% } %>
+
+    <section class="hero">
+      <div class="left">
+        <h2>Connect with certified dieticians for personalized nutrition plans</h2>
+        <p>Find experts, book appointments, and track progress — all in one simple, friendly place.</p>
+
+        <% if (!currentUser || currentUser.role === 'user') { %>
+          <a href="/dieticians" class="btn">Find a Dietician</a>
+        <% } %>
+
+        <% if (currentUser && currentUser.role === 'user') { %>
+          <div style="margin-top:12px">
+            <a href="/share-story" class="btn">Share your success story</a>
+          </div>
+        <% } %>
+
+      </div>
+
+      <div class="right">
+        <div class="card" style="width:320px">
+          <h3 style="margin-top:0">Why The Balanced Bowl?</h3>
+          <ul style="color:var(--muted)">
+            <li>Verified dieticians</li>
+            <li>Easy booking & secure payments</li>
+            <li>Track weight, goals and history</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <% if (!currentUser || currentUser.role === 'user') { %>
+      <!-- User-facing grid -->
+      <section class="grid" style="margin-top:20px">
+        <div class="card">
+          <h3>Success Stories</h3>
+          <p style="color:var(--muted)">Real journeys and wins from users — inspiring and motivating.</p>
+        </div>
+        <div class="card">
+          <h3>How it works</h3>
+          <ol style="color:var(--muted)">
+            <li>Search dieticians</li>
+            <li>Book a session</li>
+            <li>Receive personalized guidance</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>Secure Payments</h3>
+          <p style="color:var(--muted)">We integrate payments securely in production (demo simulates payment during booking).</p>
+        </div>
+      </section>
+    <% } else { %>
+      <!-- Dietician-facing grid: show info relevant to dieticians -->
+      <section class="grid" style="margin-top:20px">
+        <div class="card">
+          <h3>Practice Highlights</h3>
+          <p style="color:var(--muted)">Manage bookings, review client progress, and grow your practice.</p>
+        </div>
+        <div class="card">
+          <h3>How it works</h3>
+          <ol style="color:var(--muted)">
+            <li>Set up your profile</li>
+            <li>Receive bookings from users</li>
+            <li>Provide consultations and follow-ups</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>Payments</h3>
+          <p style="color:var(--muted)">Payments are collected from users during booking (simulated in demo). Integrate Stripe/PayPal in production.</p>
+        </div>
+      </section>
+    <% } %>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

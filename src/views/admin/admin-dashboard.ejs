@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <%- include('../partials/head') %>
+<body>
+  <div class="container">
+    <%- include('../partials/header') %>
+    <h2>Admin Dashboard</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Users</h3>
+        <ul>
+          <% users.forEach(u => { %>
+            <li><strong><%= u.name %></strong> — <%= u.email %> (<%= u.role %>)
+              <form action="/admin/delete-user/<%= u._id %>" method="post" style="display:inline">
+                <button style="margin-left:8px" class="btn">Delete</button>
+              </form>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Dieticians</h3>
+        <% dieticians.forEach(d => { %>
+          <div><strong><%= d.user.name %></strong> — <%= d.specialization.join(', ') %></div>
+        <% }) %>
+      </div>
+      <div class="card">
+        <h3>Appointments</h3>
+        <p class="meta">Total: <%= appointments.length %></p>
+      </div>
+    </div>
+    <%- include('../partials/footer') %>
+  </div>
+</body>
+</html>

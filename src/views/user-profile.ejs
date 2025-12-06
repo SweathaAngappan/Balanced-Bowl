@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <div class="card" style="max-width:700px;margin:0 auto;padding:24px">
+      <!-- Header: Avatar + Name + Role + Email -->
+      <div style="display:flex;align-items:center;gap:16px">
+        <div class="avatar" style="width:80px;height:80px;font-size:28px;">
+          <%= (user && user.name) ? user.name.split(' ').map(n => n[0]).slice(0,2).join('') : '??' %>
+        </div>
+        <div>
+          <h2 style="margin:0"><%= (user && user.name) || 'Unnamed User' %></h2>
+          <div class="meta">Role: User • Email: <%= (user && user.email) || '—' %></div>
+        </div>
+      </div>
+
+      <!-- Personal Information -->
+      <div style="margin-top:32px; line-height:1.8">
+        <h3>Personal Information</h3>
+        <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:8px">
+          <div><strong>Phone:</strong> <%= user.phone || '—' %></div>
+          <div><strong>Age:</strong> <%= (user.age != null) ? user.age : '—' %></div>
+          <div><strong>Height:</strong> <%= (user.height != null) ? user.height : '—' %> cm</div>
+          <div><strong>Weight:</strong> <%= (user.weight != null) ? user.weight : '—' %> kg</div>
+        </div>
+      </div>
+
+      <!-- About / Bio -->
+      <div style="margin-top:32px; line-height:1.8">
+        <h3>About</h3>
+        <p style="color:var(--muted)"><%= user.bio || 'No bio yet.' %></p>
+      </div>
+
+      <!-- Share your success story -->
+      <div style="margin-top:32px">
+        <h3>Share your success story</h3>
+        <p style="color:var(--muted)">Your health journey can help others 💚</p>
+        <a class="btn" href="/share-story">Share</a>
+      </div>
+    </div>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>
