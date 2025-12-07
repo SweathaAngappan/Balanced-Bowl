@@ -5,43 +5,107 @@
   <div class="container">
     <%- include('partials/header') %>
 
-    <div class="card">
-      <div class="dietician" style="align-items:center">
-        <div class="avatar" style="width:80px;height:80px;font-size:28px;">
-          <%= (dietician && dietician.user && dietician.user.name) ? dietician.user.name.split(' ').map(n => n[0]).slice(0,2).join('') : '??' %>
+    <div class="card" style="
+      max-width:780px;
+      margin:30px auto;
+      padding:30px;
+      border-radius:18px;
+    ">
+
+      <% 
+        // safe helpers
+        const uname = (dietician && dietician.user && dietician.user.name) 
+                      || (typeof user !== 'undefined' && user && user.name) 
+                      || 'Unnamed';
+        const uemail = (dietician && dietician.user && dietician.user.email) 
+                      || (user && user.email) 
+                      || '—';
+        const uphone = (dietician && dietician.user && dietician.user.phone) 
+                      || (user && user.phone) 
+                      || '—';
+        const ubio = (dietician && dietician.user && dietician.user.bio) 
+                      || (user && user.bio) 
+                      || 'No bio yet.';
+      %>
+
+      <!-- Avatar + Name -->
+      <div style="text-align:center;">
+        <div class="avatar"
+          style="
+            width:110px;
+            height:110px;
+            margin:0 auto 12px;
+            font-size:40px;
+          ">
+          <%= String(uname).split(' ').map(n => n[0] || '').slice(0,2).join('') %>
         </div>
-        <div style="margin-left:16px">
-          <h2><%= (dietician && dietician.user && dietician.user.name) || 'Unnamed Dietician' %></h2>
-          <div class="meta">Role: Dietician • Email: <%= (dietician && dietician.user && dietician.user.email) || '—' %></div>
+
+        <h2 style="margin:0; font-size:26px;"><%= uname %></h2>
+        <div class="meta" style="font-size:15px;">
+          Dietician • <%= uemail %>
         </div>
       </div>
 
-      <div style="margin-top:24px">
-        <h3>Professional Information</h3>
-        <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:8px">
-          <div><strong>Phone:</strong> <%= (dietician && dietician.user && dietician.user.phone) || '—' %></div>
-          <div><strong>Specialization:</strong> <%= (dietician && dietician.specialization && dietician.specialization.length) ? dietician.specialization.join(', ') : '—' %></div>
-          <div><strong>Experience:</strong> <%= (dietician && dietician.experienceYears) || 0 %> years</div>
-          <div><strong>Consultation Fee:</strong> ₹<%= (dietician && dietician.fee) || 0 %></div>
-          <div><strong>Modes:</strong> <%= (dietician && dietician.consultationModes && dietician.consultationModes.length) ? dietician.consultationModes.join(', ') : '—' %></div>
+      <!-- If there's no dietician record, show a helpful message -->
+      <% if (!dietician) { %>
+        <div style="margin:22px 0; padding:14px; border-radius:10px; background:#f7fff7; color:#2b6b3a;">
+          <strong>Note:</strong> This user does not have a dietician profile yet.
+        </div>
+      <% } %>
+
+      <!-- Divider -->
+      <hr style="margin:28px 0; border-color:#e4f3e4">
+
+      <!-- Professional Information -->
+      <h3 style="margin-bottom:12px">Professional Information</h3>
+
+      <div style="
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+        gap:18px;
+      ">
+        <div><strong>Phone:</strong> <%= uphone %></div>
+        <div>
+          <strong>Specialization:</strong>
+          <%= (dietician && dietician.specialization && dietician.specialization.length) ? dietician.specialization.join(', ') : '—' %>
+        </div>
+        <div><strong>Experience:</strong> <%= (dietician && dietician.experienceYears) ? dietician.experienceYears : 0 %> years</div>
+        <div><strong>Fee:</strong> ₹<%= (dietician && (dietician.fee != null)) ? dietician.fee : 0 %></div>
+        <div>
+          <strong>Modes:</strong>
+          <%= (dietician && dietician.consultationModes && dietician.consultationModes.length) ? dietician.consultationModes.join(', ') : '—' %>
         </div>
       </div>
 
-      <div style="margin-top:24px">
-        <h3>About</h3>
-        <p style="color:var(--muted)"><%= (dietician && dietician.user && dietician.user.bio) || 'No bio yet.' %></p>
-      </div>
+      <!-- Divider -->
+      <hr style="margin:28px 0; border-color:#e4f3e4">
 
+      <!-- Bio -->
+      <h3 style="margin-bottom:6px">About</h3>
+      <p style="color:var(--muted); line-height:1.7; font-size:15px;">
+        <%= ubio %>
+      </p>
+
+      <!-- Divider -->
+      <hr style="margin:28px 0; border-color:#e4f3e4">
+
+      <!-- Reviews -->
       <% if (reviews && reviews.length > 0) { %>
-        <div style="margin-top:24px">
-          <h3>Reviews</h3>
-          <% reviews.forEach(r => { %>
-            <div style="border-bottom:1px solid #f0f6f0;padding:8px 0;margin-bottom:4px;">
-              <strong><%= (r.user && r.user.name) || 'Anonymous' %></strong> — <span class="meta"><%= r.rating || 0 %> / 5</span>
-              <p style="color:var(--muted)"><%= r.comment || '' %></p>
-            </div>
-          <% }) %>
-        </div>
+        <h3>Reviews</h3>
+        <% reviews.forEach(r => { %>
+          <div style="
+            border:1px solid #e4f3e4;
+            padding:12px;
+            border-radius:10px;
+            margin-bottom:12px;
+          ">
+            <strong><%= (r.user && r.user.name) ? r.user.name : 'Anonymous' %></strong>
+            — <span class="meta"><%= r.rating || 0 %> / 5</span>
+            <p style="margin-top:6px; color:var(--muted)"><%= r.comment || '' %></p>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p style="color:var(--muted); text-align:center;">No reviews yet.</p>
       <% } %>
 
     </div>

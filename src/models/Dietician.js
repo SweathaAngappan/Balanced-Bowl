@@ -8,8 +8,11 @@ const dieticianSchema = new mongoose.Schema({
   fee: { type: Number },
   certificates: [String],
   rating: { type: Number, default: 0 },
-  reviewsCount: { type: Number, default: 0 }
-});
+  reviewsCount: { type: Number, default: 0 },
 
+  // NEW FIELDS FOR PAYMENT
+  qrCodeUrl: { type: String },  // URL to the dietician's QR code image
+  upiId: { type: String }       // Dietician's UPI ID
+});
 
 module.exports = mongoose.model('Dietician', dieticianSchema);

@@ -1,72 +1,100 @@
+// controllers/authController.js
 const User = require('../models/User');
 const Dietician = require('../models/Dietician');
-const Review = require('../models/Review');
 
+// Show registration/login pages
 exports.showRegister = (req, res) => res.render('register');
 exports.showLogin = (req, res) => res.render('login');
 
+// -------------------- REGISTER --------------------
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
-
-    // USER FIELDS
-    const u_phone = req.body.u_phone;
-    const u_age = req.body.u_age;
-    const u_height = req.body.u_height;
-    const u_weight = req.body.u_weight;
-    const u_bio = req.body.u_bio; // <-- added this line
-
-    // DIETICIAN FIELDS
-    const d_phone = req.body.d_phone;
-    const d_certificates = req.body.d_certificates;
-    const d_specialization = req.body.d_specialization;
-    const d_experienceYears = req.body.d_experienceYears;
-    const d_fee = req.body.d_fee;
-    const d_modes = req.body.d_modes;
-
-    // Check email exists
-    const existing = await User.findOne({ email });
-    if (existing) {
-      req.session.error = 'Email already used';
-      return res.redirect('/register');
-    }
-
-    // Create base user
-    const user = new User({
+    const {
+      role,
       name,
       email,
       password,
-      role,
-      phone: role === "dietician" ? d_phone : u_phone,
-      age: role === "user" ? u_age : null,
-      height: role === "user" ? u_height : null,
-      weight: role === "user" ? u_weight : null,
-      bio: role === "user" ? u_bio : null // <-- save user bio
-    });
-    await user.save();
 
-    // Create Dietician profile immediately if needed
-    if (role === "dietician") {
-      await Dietician.create({
-        user: user._id,
-        certificates: d_certificates ? d_certificates.split(',').map(x => x.trim()) : [],
-        specialization: d_specialization ? d_specialization.split(',').map(x => x.trim()) : [],
-        experienceYears: d_experienceYears ? Number(d_experienceYears) : 0,
-        fee: d_fee ? Number(d_fee) : 500,
-        consultationModes: d_modes ? d_modes.split(',').map(x => x.trim()) : ["online"]
-      });
+      // USER fields
+      u_phone,
+      u_age,
+      u_height,
+      u_weight,
+      u_bio,
+
+      // DIETICIAN fields
+      d_phone,
+      d_certificates,
+      d_specialization,
+      d_experienceYears,
+      d_fee,
+      d_modes,
+      d_bio
+    } = req.body;
+
+    // Basic user data
+    const userData = { role, name, email, password };
+
+    if (role === "user") {
+      userData.phone = u_phone || '';
+      userData.age = u_age ? Number(u_age) : null;
+      userData.height = u_height ? Number(u_height) : null;
+      userData.weight = u_weight ? Number(u_weight) : null;
+      userData.bio = u_bio || '';
     }
 
-    req.session.user = { id: user._id, name: user.name, role: user.role };
-    req.session.success = 'Account created successfully!';
-    res.redirect('/');
+    if (role === "dietician") {
+      userData.phone = d_phone || '';
+      userData.bio = d_bio || '';
+    }
+
+    // Create user
+    const createdUser = await User.create(userData);
+
+    // ------------------ SESSION & REDIRECT ------------------
+    if (role === "dietician") {
+      // Create Dietician document
+      const dieticianDoc = new Dietician({
+        user: createdUser._id,
+        certificates: d_certificates ? d_certificates.split(',').map(s => s.trim()) : [],
+        specialization: d_specialization ? d_specialization.split(',').map(s => s.trim()) : [],
+        experienceYears: d_experienceYears ? Number(d_experienceYears) : 0,
+        fee: d_fee ? Number(d_fee) : 0,
+        consultationModes: d_modes ? d_modes.split(',').map(s => s.trim()) : []
+      });
+      await dieticianDoc.save();
+
+      // Store session
+      req.session.user = {
+        id: createdUser._id,
+        name: createdUser.name,
+        role: createdUser.role
+      };
+      req.session.success = "Dietician registration successful!";
+
+      // Redirect to self-profile
+      return res.redirect('/profile');
+    }
+
+    // Regular user
+    req.session.user = {
+      id: createdUser._id,
+      name: createdUser.name,
+      role: createdUser.role,
+      height: createdUser.height,   // ensures BMI can be calculated immediately
+      weight: createdUser.weight
+    };
+    req.session.success = "User registration successful!";
+    res.redirect('/user/profile');
+
   } catch (err) {
-    console.error('Registration error:', err);
-    req.session.error = 'Registration failed';
+    console.error("REGISTRATION ERROR:", err);
+    req.session.error = "Registration failed. Please try again.";
     res.redirect('/register');
   }
 };
 
+// -------------------- LOGIN --------------------
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -75,7 +103,13 @@ exports.login = async (req, res) => {
       req.session.error = 'Invalid credentials';
       return res.redirect('/login');
     }
-    req.session.user = { id: user._id, name: user.name, role: user.role };
+    req.session.user = {
+      id: user._id,
+      name: user.name,
+      role: user.role,
+      height: user.height, // ensures BMI works on login
+      weight: user.weight
+    };
     req.session.success = `Welcome back, ${user.name}!`;
     res.redirect('/');
   } catch (err) {
@@ -85,6 +119,7 @@ exports.login = async (req, res) => {
   }
 };
 
+// -------------------- LOGOUT --------------------
 exports.logout = (req, res) => {
   req.session.destroy(err => {
     res.clearCookie('connect.sid');
@@ -92,7 +127,7 @@ exports.logout = (req, res) => {
   });
 };
 
-// Profile page
+// -------------------- SHOW PROFILE --------------------
 exports.showProfile = async (req, res) => {
   try {
     if (!req.session.user) {
@@ -100,37 +135,58 @@ exports.showProfile = async (req, res) => {
       return res.redirect('/login');
     }
 
-    // Fetch fresh user from DB
-    const user = await User.findById(req.session.user.id).lean();
-    if (!user) {
+    const dbUser = await User.findById(req.session.user.id).lean();
+    if (!dbUser) {
       req.session.error = 'User not found';
       return res.redirect('/');
     }
 
-    if (user.role === 'dietician') {
-      const dietician = await Dietician.findOne({ user: user._id })
-        .populate('user', 'name email phone bio')
-        .lean();
+    // Helper functions for BMI
+    function calculateBMI(weight, height) {
+      if (!weight || !height) return null;
+      const h = Number(height) / 100; // cm → m
+      const w = Number(weight);
+      if (!h || !w || h === 0) return null;
+      return (w / (h * h)).toFixed(1);
+    }
 
-      const reviews = await Review.find({ dietician: dietician._id })
-        .populate('user', 'name')
-        .lean();
+    function determineStatus(bmi) {
+      if (!bmi) return "No data";
+      const n = parseFloat(bmi);
+      if (n < 18.5) return "Underweight — Gotta improve! 💛";
+      if (n < 25)   return "Healthy — Looking good! 💚";
+      if (n < 30)   return "Overweight — Keep working! 🧡";
+      return "Obese — We can fix this together! ❤️";
+    }
 
+    // Dietician profile
+    if (dbUser.role === 'dietician') {
+      const dietician = await Dietician.findOne({ user: dbUser._id }).lean();
+      if (!dietician) {
+        req.session.error = 'Dietician profile not found';
+        return res.redirect('/');
+      }
       return res.render('dietician-profile', { 
-        dietician, 
-        reviews, 
-        loggedInRole: user.role 
+        user: dbUser,
+        dietician,
+        reviews: [],
+        loggedInRole: dbUser.role 
       });
     }
 
     // Regular user profile
-    return res.render('user-profile', { 
-      user,
-      loggedInRole: user.role
+    const bmi = calculateBMI(dbUser.weight, dbUser.height);
+    const status = determineStatus(bmi);
+
+    return res.render('user-profile', {
+      user: dbUser,
+      bmi,
+      status,
+      loggedInRole: dbUser.role
     });
 
   } catch (err) {
-    console.error('Profile error:', err);
+    console.error('PROFILE ERROR:', err);
     req.session.error = 'Cannot load profile';
     res.redirect('/');
   }

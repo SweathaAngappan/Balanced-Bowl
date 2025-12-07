@@ -14,17 +14,19 @@ const dieticianRoutes = require('./src/routes/dieticianRoutes');
 const appointmentRoutes = require('./src/routes/appointmentRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
 const miscRoutes = require('./src/routes/miscRoutes');
+const userRoutes = require('./src/routes/userRoutes');
 
-const app = express();   // ✅ app must be created BEFORE use()
+const app = express();
 const PORT = process.env.PORT || 3000;
+
 
 connectDB();
 
-// view engine
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src', 'views'));
 
-// middleware
+// Middleware
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -32,16 +34,17 @@ app.use(methodOverride('_method'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'src', 'public')));
 
-// sessions
+// Session setup
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'devsecret',
+  name: 'bb.sid.v3',
+  secret: 'SuperSecret_' + Date.now(),
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
   cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 day
 }));
 
-// flash-like (simple)
+// Flash-like locals
 app.use((req, res, next) => {
   res.locals.currentUser = req.session.user || null;
   res.locals.success = req.session.success || null;
@@ -54,24 +57,38 @@ app.use((req, res, next) => {
 // ---------------------------------------------------
 // ROUTES (order matters!)
 // ---------------------------------------------------
-app.use('/', miscRoutes);               // Share-story, etc. MUST come first!
+
+// Auth (must be first for /register, /login)
 app.use('/', authRoutes);
-app.use('/dieticians', dieticianRoutes); // shifted prefix to avoid route collision
+
+// Miscellaneous
+app.use('/', miscRoutes);
+
+// Dieticians (plural now, /dieticians works)
+app.use('/dieticians', dieticianRoutes);
+
+// Appointments
 app.use('/appointments', appointmentRoutes);
+
+// User
+app.use('/user', userRoutes);
+
+// Admin
 app.use('/admin', adminRoutes);
 
-// homepage
+// Homepage
 app.get('/', (req, res) => {
   res.render('index');
 });
 
-// error handler
+
+// Error handler
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).send('Something broke! ' + err.message);
 });
 
-// start server
+// Start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

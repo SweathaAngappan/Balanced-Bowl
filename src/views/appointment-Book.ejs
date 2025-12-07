@@ -5,32 +5,37 @@
   <div class="container">
     <%- include('partials/header') %>
 
-    <div class="card" style="max-width:700px;margin:18px auto">
-      <h2>Book with <%= dietician.user.name %></h2>
-      <form action="/appointments/checkout" method="post">
+    <div class="card" style="max-width:600px;margin:0 auto;padding:24px">
+      <h2>Book Appointment With <%= dietician.user.name %></h2>
+
+      <p class="meta">
+        Fee: ₹<%= dietician.fee %><br>
+        Experience: <%= dietician.experienceYears %> years
+      </p>
+
+      <form action="/appointments/create" method="post" style="margin-top:16px">
         <input type="hidden" name="dieticianId" value="<%= dietician._id %>">
+
         <div class="field">
-          <label>Choose date & time</label>
-          <input type="datetime-local" name="date" required>
+          <label>Date</label>
+          <input type="date" name="date" required>
         </div>
+
         <div class="field">
           <label>Mode</label>
           <select name="mode">
-            <% (dietician.consultationModes || ['online']).forEach(function(m){ %>
+            <% dietician.consultationModes.forEach(m => { %>
               <option value="<%= m %>"><%= m %></option>
             <% }) %>
           </select>
         </div>
+
         <div class="field">
           <label>Notes (optional)</label>
-          <textarea name="notes"></textarea>
+          <textarea name="notes" rows="3"></textarea>
         </div>
 
-        <p style="color:var(--muted)">Fee: ₹<%= dietician.fee %></p>
-
-        
-
-        <button class="btn">Confirm booking — ₹<%= dietician.fee %></button>
+        <button class="btn" style="margin-top:12px">Confirm Booking</button>
       </form>
     </div>
 

@@ -56,11 +56,15 @@
             <label>Weight (kg)</label>
             <input type="number" name="u_weight">
           </div>
+
+          <div class="field">
+            <label>Bio</label>
+            <textarea name="u_bio" placeholder="Tell us about your goals, lifestyle, habits..."></textarea>
+          </div>
         </div>
 
         <!-- DIETICIAN FIELDS -->
         <div id="dieticianFields" style="display:none">
-
           <div class="field">
             <label>Phone</label>
             <input type="text" name="d_phone">
@@ -68,12 +72,12 @@
 
           <div class="field">
             <label>Certificates (comma separated)</label>
-            <input type="text" name="d_certificates" placeholder="e.g., RDN, IDF Level 2">
+            <input type="text" name="d_certificates" placeholder="RDN, IDF Level 2">
           </div>
 
           <div class="field">
             <label>Specialization (comma separated)</label>
-            <input type="text" name="d_specialization" placeholder="e.g., Weight Loss, PCOD, Diabetes">
+            <input type="text" name="d_specialization" placeholder="Weight Loss, PCOD, Diabetes">
           </div>
 
           <div class="field">
@@ -91,6 +95,10 @@
             <input type="text" name="d_modes" placeholder="online, in-person">
           </div>
 
+          <div class="field">
+            <label>Bio / About</label>
+            <textarea name="d_bio" placeholder="Tell us about yourself, experience, approach..."></textarea>
+          </div>
         </div>
 
         <button class="btn" style="margin-top:12px">Create account</button>
@@ -103,7 +111,6 @@
           document.getElementById("dieticianFields").style.display = (role === "dietician") ? "block" : "none";
         });
       </script>
-
     </div>
 
     <%- include('partials/footer') %>
