@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <div class="card" style="max-width:600px;margin:0 auto;padding:24px">
+      <h2>Book Appointment With <%= dietician.user.name %></h2>
+
+      <p class="meta">
+        Fee: ₹<%= dietician.fee %><br>
+        Experience: <%= dietician.experienceYears %> years
+      </p>
+
+      <form action="/appointments/create" method="post" style="margin-top:16px">
+        <input type="hidden" name="dieticianId" value="<%= dietician._id %>">
+
+        <div class="field">
+          <label>Date</label>
+          <input type="date" name="date" required>
+        </div>
+
+        <div class="field">
+          <label>Mode</label>
+          <select name="mode">
+            <% dietician.consultationModes.forEach(m => { %>
+              <option value="<%= m %>"><%= m %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Notes (optional)</label>
+          <textarea name="notes" rows="3"></textarea>
+        </div>
+
+        <button class="btn" style="margin-top:12px">Confirm Booking</button>
+      </form>
+    </div>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

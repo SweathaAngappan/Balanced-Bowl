@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <div class="card" style="max-width:900px;margin:18px auto">
+      <h2>Profile — <%= user.name %></h2>
+      <p class="meta">Role: <%= user.role %> • Email: <%= user.email %></p>
+
+      <% if (user.role === 'user') { %>
+        <h3>Your details</h3>
+        <ul>
+          <li>Phone: <%= user.phone || '—' %></li>
+          <li>Age: <%= user.age || '—' %></li>
+          <li>Height: <%= user.height || '—' %> cm</li>
+          <li>Weight: <%= user.weight || '—' %> kg</li>
+        </ul>
+
+        <div style="margin-top:18px">
+          <h3>Share your success story</h3>
+          <p style="color:var(--muted)">Have progress to share? Email us or use the contact form (coming soon).</p>
+          <a class="btn" href="/contact">Share your story</a>
+        </div>
+      <% } else if (user.role === 'dietician') { %>
+        <h3>Professional profile</h3>
+        <% if (dietician) { %>
+          <p>Experience: <%= dietician.experienceYears %> years • Fee: ₹<%= dietician.fee %></p>
+          <p>Specializations: <%= (dietician.specialization || []).join(', ') || '—' %></p>
+          <p>Certificates: <%= (dietician.certificates || []).join(', ') || '—' %></p>
+          <p>Consultation modes: <%= (dietician.consultationModes || []).join(', ') %></p>
+        <% } else { %>
+          <p style="color:var(--muted)">No dietician profile yet.</p>
+        <% } %>
+      <% } %>
+    </div>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

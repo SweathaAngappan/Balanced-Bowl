@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+    <div class="card" style="max-width:520px;margin:18px auto">
+      <h2>Login</h2>
+      <form action="/login" method="post">
+        <div class="field"><label>Email</label><input type="email" name="email" required></div>
+        <div class="field"><label>Password</label><input type="password" name="password" required></div>
+        <button class="btn">Login</button>
+      </form>
+    </div>
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

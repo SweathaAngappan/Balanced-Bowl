@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <div class="card" style="max-width:650px;margin:0 auto;padding:24px">
+
+      <h2>Complete Payment</h2>
+      <h3 style="margin-top:10px">Dietician: <%= dietician.user.name %></h3>
+
+      <p><strong>Date:</strong> <%= new Date(date).toLocaleString() %></p>
+      <p><strong>Mode:</strong> <%= mode %></p>
+      <p><strong>Fee:</strong> <span style="font-weight:bold;color:#1b7a1b">₹<%= dietician.fee %></span></p>
+
+      <hr style="margin: 20px 0;">
+
+      <!-- QR CODE SECTION -->
+      <h3>Pay using QR Code</h3>
+      <p>Scan using GPay / PhonePe / Paytm</p>
+
+      <div style="text-align:center; margin-bottom:20px;">
+        <img src="<%= dietician.qrCodeUrl %>" 
+             style="width:250px;height:250px;border:1px solid #ccc;border-radius:8px;">
+      </div>
+
+      <!-- UPI ID -->
+      <div style="padding:12px; background:#f0f8ff;border-radius:8px;margin-bottom:20px;">
+        <strong>UPI ID:</strong> <%= dietician.upiId %>
+      </div>
+
+      <hr style="margin:20px 0;">
+
+      <!-- CREDIT / DEBIT CARD (Dummy UI only) -->
+      <h3>Card / Netbanking (Manual)</h3>
+      <p>This is a preview only. Pay using your banking app.</p>
+
+      <input type="text" placeholder="Card Number" class="input" disabled>
+      <input type="text" placeholder="Expiry" class="input" disabled>
+      <input type="text" placeholder="CVV" class="input" disabled>
+
+      <hr style="margin:20px 0;">
+
+      <form action="/appointments/pay" method="post">
+        <input type="hidden" name="dieticianId" value="<%= dietician._id %>">
+        <input type="hidden" name="date" value="<%= date %>">
+        <input type="hidden" name="mode" value="<%= mode %>">
+        <input type="hidden" name="notes" value="<%= notes %>">
+
+        <button class="btn" 
+                style="margin-top:12px; background:green; color:white; width:100%; padding:12px; font-size:1.2rem;">
+          ✔ I Have Paid – Confirm Appointment
+        </button>
+      </form>
+
+    </div>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

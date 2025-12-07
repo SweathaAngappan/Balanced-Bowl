@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+
+<div class="container">
+  <%- include('partials/header') %>
+
+  <h2>Your Appointments</h2>
+
+  <% if (appointments.length === 0) { %>
+    <div class="card" style="padding:20px; text-align:center">
+      You have no appointments yet.
+    </div>
+  <% } %>
+
+  <div class="grid" style="margin-top:20px;">
+    <% appointments.forEach(a => { %>
+
+      <div class="card" style="padding:18px; position:relative">
+
+        <h3 style="margin:0 0 10px 0;">
+          <%= a.dietician.user.name %>
+        </h3>
+
+        <div class="meta" style="line-height:1.6;">
+          <strong>Date:</strong> <%= a.date.toDateString() %> <br>
+          <strong>Mode:</strong> <%= a.mode %> <br>
+          <strong>Fee:</strong> ₹<%= a.dietician.fee %> <br>
+          <strong>Status:</strong> 
+          <span style="text-transform:capitalize; font-weight:600;">
+            <%= a.status %>
+          </span>
+
+          <% if (a.status === 'cancelled') { %>
+            <div style="margin-top:6px; color:#d33;">
+              <strong>Reason:</strong> <%= a.cancelReason %>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- BUTTONS SECTION -->
+        <% if (a.status === 'booked') { %>
+          <div style="display:flex; gap:10px; margin-top:14px;">
+
+            <!-- Reminder -->
+            <form action="/appointments/remind/<%= a._id %>" method="post">
+              <button class="btn" style="background:#88b788;">Remind</button>
+            </form>
+
+            <!-- Cancel -->
+            <button 
+              onclick="openCancelModal('<%= a._id %>')" 
+              class="btn" 
+              style="background:#d66;">
+              Cancel
+            </button>
+
+          </div>
+        <% } %>
+
+      </div>
+
+    <% }) %>
+  </div>
+
+  <!-- CANCEL MODAL -->
+  <div id="cancelModal" 
+       style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+              background:rgba(0,0,0,0.4); padding-top:100px;">
+
+    <div style="background:white; max-width:400px; margin:auto; padding:20px; border-radius:10px;">
+      <h3>Cancel Appointment</h3>
+
+      <form id="cancelForm" method="post">
+        <label>Reason for cancellation</label>
+        <textarea name="reason" 
+                  required 
+                  style="width:100%; height:80px; padding:8px;"></textarea>
+
+        <div style="display:flex; gap:10px; margin-top:12px;">
+          <button class="btn" style="background:#d66;">Confirm Cancel</button>
+          <button type="button" class="btn" onclick="closeCancelModal()">Close</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+  <script>
+    function openCancelModal(id) {
+      document.getElementById("cancelForm").action = "/appointments/cancel/" + id;
+      document.getElementById("cancelModal").style.display = "block";
+    }
+
+    function closeCancelModal() {
+      document.getElementById("cancelModal").style.display = "none";
+    }
+  </script>
+
+  <%- include('partials/footer') %>
+</div>
+
+</body>
+</html>

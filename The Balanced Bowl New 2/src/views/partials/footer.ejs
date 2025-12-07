@@ -1,0 +1,18 @@
+<footer class="footer">
+  <div>© <%= new Date().getFullYear() %> The Balanced Bowl — All Rights Reserved</div>
+</footer>
+
+<script src="/js/main.js"></script>
+
+<!-- Auto-dismiss flash messages after 3 seconds -->
+<script>
+  const flashMsg = document.getElementById('flash-msg');
+  if (flashMsg) {
+    setTimeout(() => {
+      flashMsg.style.opacity = '0';
+      flashMsg.style.transition = 'opacity .5s';
+
+      setTimeout(() => flashMsg.remove(), 500);
+    }, 3000);
+  }
+</script>
