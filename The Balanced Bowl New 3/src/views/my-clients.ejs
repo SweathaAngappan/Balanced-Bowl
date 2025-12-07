@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <h2>My Clients</h2>
+
+    <% if (clients.length === 0) { %>
+      <div class="card" style="padding:20px; text-align:center;">
+        No clients yet.
+      </div>
+    <% } %>
+
+    <div class="grid" style="margin-top:20px;">
+      <% clients.forEach(c => { %>
+        <div class="card" style="padding:18px;">
+          <h3><%= c.user.name %></h3>
+          <div class="meta">
+            <strong>Email:</strong> <%= c.user.email %><br>
+            <strong>Phone:</strong> <%= c.user.phone || '—' %><br>
+            <strong>Appointment:</strong> <%= c.date.toDateString() %><br>
+            <strong>Status:</strong> <%= c.status %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

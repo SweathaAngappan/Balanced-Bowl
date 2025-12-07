@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="flash flash-error">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <div class="card" style="max-width:520px;margin:18px auto">
+      <h2>Login</h2>
+      <form action="/login" method="post">
+        <div class="field"><label>Email</label><input type="email" name="email" required></div>
+        <div class="field">
+          <label>Password</label>
+          <div class="password-wrapper" style="position:relative;">
+            <input type="password" id="password" name="password" required style="padding-right:40px;">
+            <span id="togglePassword" 
+                  style="position:absolute; right:10px; top:50%; transform:translateY(-50%);
+                         cursor:pointer; font-size:18px;">
+              👁️
+            </span>
+          </div>
+        </div>
+        <button class="btn">Login</button>
+      </form>
+    </div>
+
+    <%- include('partials/footer') %>
+  </div>
+
+<script>
+// ---------- Show / Hide Password ----------
+const pwdInput = document.getElementById("password");
+const toggle = document.getElementById("togglePassword");
+if (toggle) {
+  toggle.addEventListener("click", () => {
+    const type = pwdInput.type === "password" ? "text" : "password";
+    pwdInput.type = type;
+    toggle.textContent = type === "password" ? "👁️" : "🙈";
+  });
+}
+</script>
+
+</body>
+</html>

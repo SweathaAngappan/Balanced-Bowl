@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+  <%
+  // Defensive guards so EJS won't throw ReferenceError
+  var bmi = (typeof bmi !== 'undefined') ? bmi : null;
+  var status = (typeof status !== 'undefined') ? status : null;
+  var user = (typeof user !== 'undefined' && user) ? user : {};
+%>
+
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <div class="card" style="
+      max-width:750px;
+      margin:30px auto;
+      padding:30px;
+      border-radius:18px;
+    ">
+
+      <!-- Avatar + Name -->
+      <div style="text-align:center;">
+        <div class="avatar"
+          style="
+            width:110px;
+            height:110px;
+            margin:0 auto 12px;
+            font-size:40px;
+          ">
+          <%= user.name.split(' ').map(n => n[0]).slice(0,2).join('') %>
+        </div>
+
+        <h2 style="margin:0; font-size:26px;"><%= user.name %></h2>
+        <div class="meta" style="font-size:15px;">User • <%= user.email %></div>
+      </div>
+
+      <!-- Divider -->
+      <hr style="margin:28px 0; border-color:#e4f3e4">
+
+      <!-- Personal Info -->
+      <h3 style="margin-bottom:12px">Personal Information</h3>
+
+      
+
+
+      <div style="
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+        gap:18px;
+      ">
+        <div><strong>Phone:</strong> <%= user.phone || '—' %></div>
+        <div><strong>Age:</strong> <%= user.age || '—' %></div>
+        <div><strong>Height:</strong> <%= user.height || '—' %> cm</div>
+        <div><strong>Weight:</strong> <%= user.weight || '—' %> kg</div>
+      </div>
+
+      <!-- Health Status -->
+<div style="margin-top:32px">
+  <h3>Health Status</h3>
+
+  <p><strong>BMI:</strong> <%= bmi || '—' %></p>
+  <p><strong>Status:</strong> <%= status %></p>
+
+  <a class="btn" href="/user/edit-health" style="margin-top:8px">Update Health Info</a>
+</div>
+
+      <!-- Divider -->
+      <hr style="margin:28px 0; border-color:#e4f3e4">
+
+      <!-- Bio -->
+      <h3 style="margin-bottom:6px">About</h3>
+      <p style="color:var(--muted); line-height:1.7; font-size:15px;">
+        <%= user.bio || 'No bio yet.' %>
+      </p>
+
+      <!-- Divider -->
+      <hr style="margin:28px 0; border-color:#e4f3e4">
+
+      <!-- Share -->
+      <div style="text-align:center;">
+        <h3>Share your success story</h3>
+        <p style="color:var(--muted)">Your journey can inspire others 🌿</p>
+        <a class="btn" href="/share-story">Share</a>
+      </div>
+
+    </div>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

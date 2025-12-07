@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <div class="card" style="max-width:500px;margin:20px auto;padding:20px;">
+      <h2>Update Health Info</h2>
+
+      <% 
+        // Extra guards (protect against null user)
+        var u = (typeof user !== 'undefined' && user) ? user : {};
+      %>
+
+      <form action="/user/edit-health" method="post">
+
+        <div class="field">
+          <label>Height (cm)</label>
+          <input type="number" name="height" value="<%= (u.height !== undefined && u.height !== null) ? u.height : '' %>" required>
+        </div>
+
+        <div class="field">
+          <label>Weight (kg)</label>
+          <input type="number" name="weight" value="<%= (u.weight !== undefined && u.weight !== null) ? u.weight : '' %>" required>
+        </div>
+
+        <button class="btn" style="margin-top:10px">Save</button>
+      </form>
+    </div>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

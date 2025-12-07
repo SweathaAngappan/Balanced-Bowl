@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <h2>Your Appointments</h2>
+    <div class="grid" style="margin-top:12px">
+      <% if (!appts || appts.length === 0) { %>
+        <div class="card">You have no upcoming appointments</div>
+      <% } else { %>
+        <% appts.forEach(function(a){ %>
+          <div class="card">
+            <div style="display:flex;justify-content:space-between">
+              <div>
+                <strong><%= a.dietician.user.name %></strong>
+                <div class="meta"><%= new Date(a.date).toLocaleString() %> • <%= a.mode %></div>
+              </div>
+              <div>
+                <span class="meta"><%= a.status %></span>
+              </div>
+            </div>
+            <p style="color:var(--muted)"><%= a.notes || '' %></p>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

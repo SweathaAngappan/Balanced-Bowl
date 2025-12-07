@@ -1,0 +1,31 @@
+{
+  "name": "the-balanced-bowl",
+  "version": "1.0.0",
+  "description": "The Balanced Bowl - dietician booking platform (MVC)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "Codeverse (Team 10)",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "connect-mongo": "^4.6.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.6.1",
+    "ejs": "^3.1.10",
+    "express": "^4.22.1",
+    "express-session": "^1.17.3",
+    "method-override": "^3.0.0",
+    "mongoose": "^7.8.8",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^7.0.11",
+    "razorpay": "^2.9.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  },
+  "keywords": []
+}

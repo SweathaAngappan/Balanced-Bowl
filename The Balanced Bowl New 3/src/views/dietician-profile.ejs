@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <div class="card" style="
+      max-width:780px;
+      margin:30px auto;
+      padding:30px;
+      border-radius:18px;
+    ">
+
+      <% 
+        const uname = (dietician && dietician.user && dietician.user.name) 
+                      || (typeof user !== 'undefined' && user && user.name) 
+                      || 'Unnamed';
+        const uemail = (dietician && dietician.user && dietician.user.email) 
+                      || (user && user.email) 
+                      || '—';
+        const uphone = (dietician && dietician.user && dietician.user.phone) 
+                      || (user && user.phone) 
+                      || '—';
+        const ubio = (dietician && dietician.user && dietician.user.bio) 
+                      || (user && user.bio) 
+                      || 'No bio yet.';
+      %>
+
+      <!-- Avatar + Name -->
+      <div style="text-align:center;">
+        <div class="avatar"
+          style="
+            width:110px;
+            height:110px;
+            margin:0 auto 12px;
+            font-size:40px;
+          ">
+          <%= String(uname).split(' ').map(n => n[0] || '').slice(0,2).join('') %>
+        </div>
+
+        <h2 style="margin:0; font-size:26px;"><%= uname %></h2>
+        <div class="meta" style="font-size:15px;">
+          Dietician • <%= uemail %>
+        </div>
+      </div>
+
+      <!-- If no dietician profile -->
+      <% if (!dietician) { %>
+        <div style="margin:22px 0; padding:14px; border-radius:10px; background:#f7fff7; color:#2b6b3a;">
+          <strong>Note:</strong> This user does not have a dietician profile yet.
+        </div>
+      <% } %>
+
+      <hr style="margin:28px 0; border-color:#e4f3e4">
+
+      <!-- Professional Information -->
+      <h3 style="margin-bottom:12px">Professional Information</h3>
+      <div style="
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+        gap:18px;
+      ">
+        <div><strong>Phone:</strong> <%= uphone %></div>
+        <div>
+          <strong>Specialization:</strong>
+          <%= (dietician && dietician.specialization && dietician.specialization.length) ? dietician.specialization.join(', ') : '—' %>
+        </div>
+        <div><strong>Experience:</strong> <%= (dietician && dietician.experienceYears) ? dietician.experienceYears : 0 %> years</div>
+        <div><strong>Fee:</strong> ₹<%= (dietician && (dietician.fee != null)) ? dietician.fee : 0 %></div>
+        <div>
+          <strong>Modes:</strong>
+          <%= (dietician && dietician.consultationModes && dietician.consultationModes.length) ? dietician.consultationModes.join(', ') : '—' %>
+        </div>
+      </div>
+
+      <!-- Certificates -->
+      <% if (dietician && dietician.certificates && dietician.certificates.length > 0) { %>
+        <hr style="margin:28px 0; border-color:#e4f3e4">
+        <h3>Certificates</h3>
+        <div style="display:flex; flex-wrap:wrap; gap:12px;">
+          <% dietician.certificates.forEach(cert => { %>
+            <a href="<%= cert %>" target="_blank" style="text-decoration:none; color:var(--accent-600);">
+              <div style="
+                padding:8px 12px;
+                border:1px solid #dfe8df;
+                border-radius:10px;
+                background:#f7fff7;
+              ">
+                View Certificate
+              </div>
+            </a>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <hr style="margin:28px 0; border-color:#e4f3e4">
+
+      <!-- Bio -->
+      <h3 style="margin-bottom:6px">About</h3>
+      <p style="color:var(--muted); line-height:1.7; font-size:15px;">
+        <%= ubio %>
+      </p>
+
+      <hr style="margin:28px 0; border-color:#e4f3e4">
+
+      <!-- Reviews -->
+      <h3>Reviews</h3>
+      <% if (reviews && reviews.length > 0) { %>
+        <% reviews.forEach(r => { %>
+          <div class="card" style="margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <strong><%= (r.user && r.user.name) ? r.user.name : 'Anonymous' %></strong>
+              <span class="meta"><%= r.rating || 0 %> / 5 ⭐</span>
+            </div>
+            <p style="margin-top:6px; color:var(--muted)"><%= r.comment || '' %></p>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p style="color:var(--muted); text-align:center;">No reviews yet.</p>
+      <% } %>
+
+      <!-- Submit Review Form -->
+<% if (loggedInRole === 'user') { %>
+  <div style="margin-top:20px;">
+    <h4>Submit Your Review</h4>
+    <form id="reviewForm" action="/dieticians/reviews/<%= dietician._id %>" method="POST" style="margin-top:12px;">
+
+      <!-- Star Rating -->
+      <div id="starRating" style="display:flex; gap:6px; font-size:28px; cursor:pointer; color:var(--muted); margin-bottom:12px;">
+        <span data-value="1">&#9733;</span>
+        <span data-value="2">&#9733;</span>
+        <span data-value="3">&#9733;</span>
+        <span data-value="4">&#9733;</span>
+        <span data-value="5">&#9733;</span>
+      </div>
+      <input type="hidden" name="rating" id="ratingInput" required>
+
+      <label>Comment:</label>
+      <textarea name="comment" rows="3" style="width:100%; margin-top:6px;" placeholder="Write your comment..."></textarea>
+      <br><br>
+      <button type="submit" class="btn">Submit Review</button>
+    </form>
+  </div>
+
+  <script>
+    const stars = document.querySelectorAll('#starRating span');
+    const ratingInput = document.getElementById('ratingInput');
+
+    stars.forEach(star => {
+      star.addEventListener('mouseover', () => {
+        const val = star.dataset.value;
+        highlightStars(val);
+      });
+      star.addEventListener('mouseout', () => {
+        highlightStars(ratingInput.value || 0);
+      });
+      star.addEventListener('click', () => {
+        ratingInput.value = star.dataset.value;
+        highlightStars(ratingInput.value);
+      });
+    });
+
+    function highlightStars(rating) {
+      stars.forEach(star => {
+        star.style.color = star.dataset.value <= rating ? 'var(--accent-600)' : 'var(--muted)';
+      });
+    }
+  </script>
+<% } else { %>
+  <p style="color:var(--muted); margin-top:12px;">Login as a user to submit a review.</p>
+<% } %>
+
+
+    </div>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

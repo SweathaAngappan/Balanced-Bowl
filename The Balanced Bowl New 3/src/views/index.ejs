@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+  <%- include('partials/head') %>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <% if (success) { %>
+      <div class="card" style="border-left:4px solid #9fe0aa;margin-top:18px;padding:12px"><strong>Success:</strong> <%= success %></div>
+    <% } %>
+    <% if (error) { %>
+      <div class="card" style="border-left:4px solid #ffb4b4;margin-top:18px;padding:12px"><strong>Error:</strong> <%= error %></div>
+    <% } %>
+
+    <section class="hero">
+      <div class="left">
+        <h2>Connect with certified dieticians for personalized nutrition plans</h2>
+        <p>Find experts, book appointments, and track progress — all in one simple, friendly place.</p>
+
+        <% if (!currentUser || currentUser.role === 'user') { %>
+          <a href="/dieticians" class="btn">Find a Dietician</a>
+        <% } %>
+
+        <section class="hero" style="display:flex; gap:20px; flex-wrap:wrap;">
+  <!-- Left: Success Stories -->
+  <div style="flex:2; min-width:300px;">
+    <div class="card" style="padding:12px;">
+      <h3>Success Stories</h3>
+      <p style="color:var(--muted); margin-bottom:12px;">Real journeys and wins from users — inspiring and motivating.</p>
+
+      <% if (stories && stories.length > 0) { %>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          <% stories.forEach(s => { %>
+            <div style="flex:1 1 140px; border:1px solid #e4f3e4; border-radius:8px; padding:10px; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+              <strong><%= s.name %></strong>
+              <p style="color:var(--muted); margin:6px 0; font-size:0.95rem;"><%= s.story %></p>
+              <small class="meta" style="color:var(--muted); font-size:0.8rem;">Shared on <%= new Date(s.createdAt).toLocaleDateString() %></small>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <p style="color:var(--muted); margin-top:6px;">No success stories yet. Be the first to share yours!</p>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Right: Why The Balanced Bowl -->
+<div style="flex:2; min-width:200px;">
+  <div class="card" style="padding:20px; margin-top:20px; margin-bottom:20px;">
+    <h3 style="margin-top:2; margin-bottom:14px;">Why The Balanced Bowl?</h3>
+    <ul style="color: var(--muted); list-style: none; padding: 0; margin: 0;">
+      <li style="margin-bottom:8px;">Verified dieticians</li>
+      <li style="margin-bottom:8px;">Easy booking & secure payments</li>
+      <li>Track weight, goals and history</li>
+    </ul>
+  </div>
+</div>
+
+</section>
+
+
+    <% if (!currentUser || currentUser.role === 'user') { %>
+      <!-- User-facing grid -->
+      <section class="grid" style="margin-top:20px">
+        
+        <div class="card">
+          <h3>How it works</h3>
+          <ol style="color:var(--muted)">
+            <li>Search dieticians</li>
+            <li>Book a session</li>
+            <li>Receive personalized guidance</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>Secure Payments</h3>
+
+          <p style="color:var(--muted)">We integrate payments securely in production.</p>
+        </div>
+      </section>
+    <% } else { %>
+      <!-- Dietician-facing grid: show info relevant to dieticians -->
+      <section class="grid" style="margin-top:20px">
+        <div class="card">
+          <h3>Practice Highlights</h3>
+          <p style="color:var(--muted)">Manage bookings, review client progress, and grow your practice.</p>
+        </div>
+        <div class="card">
+          <h3>How it works</h3>
+          <ol style="color:var(--muted)">
+            <li>Set up your profile</li>
+            <li>Receive bookings from users</li>
+            <li>Provide consultations and follow-ups</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>Payments</h3>
+          <p style="color:var(--muted)">Payments are collected from users during booking (simulated in demo). Integrate Stripe/PayPal in production.</p>
+        </div>
+      </section>
+    <% } %>
+
+    
+
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>
